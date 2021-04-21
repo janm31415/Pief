@@ -1,0 +1,7 @@
+//four point scheme
+
+predict;
+-1/16; 9/16; 9/16; -1/16;
+
+update;
+0.25; 0.25;

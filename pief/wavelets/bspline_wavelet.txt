@@ -1,0 +1,13 @@
+//b-spline wavelets
+
+scale_even;
+2;
+
+update;
+-0.5;-0.5;
+
+predict;
+0.5;0.5;
+
+update;
+3.0 / 8.0; 3.0 / 8.0;

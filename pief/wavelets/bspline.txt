@@ -1,0 +1,10 @@
+//b-spline 
+
+update;
+-0.25;-0.25;
+
+scale_even;
+2;
+
+predict;
+0.5;0.5;

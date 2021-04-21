@@ -1,0 +1,16 @@
+//daubechies d4
+
+update;
+0;sqrt(3);
+
+predict;
+(sqrt(3)-2)/4; sqrt(3)/4; 0; 0;
+
+update;
+0;0;0;-1;
+
+scale_even;
+((sqrt(3.0) - 1.0) / (2.0));
+
+scale_odd;
+((sqrt(3.0) + 1.0) / (2.0));
