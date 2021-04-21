@@ -1,10 +1,3 @@
-set(TBB_INCLUDE_DIR "C:/Program Files/TBB/include")
-set(TBB_LIBRARY "C:/Program Files/TBB/lib/intel64/vc14")
-set(TBB_DIR "C:/Program Files/TBB")
-find_package(TBB REQUIRED)
-include_directories(${TBB_INCLUDE_DIR})
-link_directories(${TBB_LIBRARY})
-
 
 set(IMGUI
 ${CMAKE_CURRENT_SOURCE_DIR}/../imgui_sdl/imgui.h
@@ -105,7 +98,6 @@ source_group("ThirdParty/json" FILES ${JSON})
 	
 target_link_libraries(pief
     PRIVATE	
-    tbb.lib
     SDL2
     SDL2main  
     opengl32.lib   
