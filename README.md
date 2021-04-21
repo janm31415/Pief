@@ -1,2 +1,2 @@
-# Pief
+# pief
 Experiment with wavelets
