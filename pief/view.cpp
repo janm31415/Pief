@@ -771,24 +771,9 @@ void view::_log_window()
   log.Draw("Log window", &_settings.log_window);
   }
 
-static void GLAPIENTRY gl_debug_callback_function(GLenum source,
-          GLenum type,
-          GLuint id,
-          GLenum severity,
-          GLsizei length,
-          const GLchar *message,
-          const void *userParam)
-          {
-          std::cerr << message << "\n";
-          }
-
 
 void view::loop()
   {
-  int counter = 0;
-  //glEnable(GL_DEBUG_OUTPUT);
-  //glDebugMessageCallback(gl_debug_callback_function, nullptr);
-  
   while (!_quit)
     {
     _poll_for_events();
@@ -870,6 +855,5 @@ void view::loop()
     SDL_GL_SwapWindow(_window);
 
     glGetError(); //hack
-    ++counter;
     }
   }
