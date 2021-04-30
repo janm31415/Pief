@@ -1,5 +1,5 @@
 #include "view.h"
-
+#include <iostream>
 #include <SDL_syswm.h>
 
 #include "imgui.h"
@@ -17,6 +17,7 @@
 #include <streambuf>
 #include <ctime>
 #include <iomanip>
+#include <cmath>
 
 #include "buffer_object.h"
 #include "frame_buffer_object.h"
@@ -61,6 +62,8 @@ _viewport_pos_x(V_X), _viewport_pos_y(V_Y)
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
+  
+  //SDL_GL_SetAttribute(SDL_GL_CONTEXT_FLAGS, SDL_GL_CONTEXT_DEBUG_FLAG);
 
   _window = SDL_CreateWindow("Pief",
     SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
@@ -216,8 +219,7 @@ void view::_setup_blit_gl_objects(bool fullscreen)
   _vao_blit->release();
   gl_check_error(" _vao_blit->release()");
 
-  std::string vertex_shader = R"(
-#version 330 core
+  std::string vertex_shader = R"(#version 330 core
 precision mediump float;
 precision mediump int;
 layout (location = 0) in vec3 vPosition;
@@ -228,17 +230,19 @@ void main()
   gl_Position = vec4(vPosition, 1.0f);
   }
 )";
-  std::string fragment_shader = R"(
-#version 330 core
+  std::string fragment_shader = R"(#version 330 core
 precision mediump float;
 precision mediump int;
 uniform vec2      iBlitResolution;
 uniform vec2      iBlitOffset;
 uniform sampler2D iChannel0;
+
+out vec4 FragColor;
+
 void main()
 {
     vec2 pos = (gl_FragCoord.xy - iBlitOffset)/iBlitResolution;
-    gl_FragColor = texture2D(iChannel0, pos);
+    FragColor = texture(iChannel0, pos);
 }
 )";
 
@@ -258,7 +262,7 @@ void view::_setup_gl_objects()
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 
-  std::string vertex_shader = R"(#version 300 es
+  std::string vertex_shader = R"(#version 330 core
 precision mediump float;
 precision mediump int;
 layout (location = 0) in vec2 vPosition;
@@ -269,7 +273,7 @@ void main()
   }
 )";
 
-  std::string fragment = R"(#version 300 es
+  std::string fragment = R"(#version 330 core
 precision mediump float;
 precision mediump int;
 
@@ -767,10 +771,24 @@ void view::_log_window()
   log.Draw("Log window", &_settings.log_window);
   }
 
+static void GLAPIENTRY gl_debug_callback_function(GLenum source,
+          GLenum type,
+          GLuint id,
+          GLenum severity,
+          GLsizei length,
+          const GLchar *message,
+          const void *userParam)
+          {
+          std::cerr << message << "\n";
+          }
 
 
 void view::loop()
   {
+  int counter = 0;
+  //glEnable(GL_DEBUG_OUTPUT);
+  //glDebugMessageCallback(gl_debug_callback_function, nullptr);
+  
   while (!_quit)
     {
     _poll_for_events();
@@ -790,15 +808,22 @@ void view::loop()
     gl_check_error("_vbo_array->bind()");
 
     _program->bind();
+    gl_check_error("_program->bind()");
 
     _program->enable_attribute_array(0);
+    gl_check_error("_program->enable_attribute_array(0)");
     _program->set_attribute_buffer(0, GL_FLOAT, 0, 2, sizeof(GLfloat) * 2); // x y
+    gl_check_error("_program->set_attribute_buffer(0, GL_FLOAT, 0, 2, sizeof(GLfloat) * 2)");
 
     glDrawArrays(GL_LINE_STRIP, 0, (GLsizei)(_m.values.size()));
-
+    gl_check_error("glDrawArrays");
+    
     _program->release();
+    gl_check_error("_program->release()");
     _m._vbo_array->release();
+    gl_check_error("_m._vbo_array->release()");
     _m._vao->release();
+    gl_check_error("_m._vao->release()");
     _fbo->release();
     gl_check_error("_fbo->release()");
 
@@ -845,5 +870,6 @@ void view::loop()
     SDL_GL_SwapWindow(_window);
 
     glGetError(); //hack
+    ++counter;
     }
   }

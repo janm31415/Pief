@@ -426,6 +426,11 @@ void fill_render_data(model& m, const std::vector<double>& values)
   m._vbo_array->set_usage_pattern(GL_STATIC_DRAW);
   m._vbo_array->allocate(vertices.data(), (int)(sizeof(GLfloat) * vertices.size()));
   gl_check_error("_vbo_array->allocate()");
+  
+  m._vao->release();
+  gl_check_error("m._vao->release()");
+  m._vbo_array->release();
+  gl_check_error("m._vbo_array->release()");
   }
 
 double compute_volume(const std::vector<double>& values)

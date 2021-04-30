@@ -19,11 +19,10 @@ int main(int /*argc*/, char** /*argv*/)
     SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "Initilizated SDL Failed: %s", SDL_GetError());
     return -1;
     }
-  
-  view my_view;
-
-  my_view.loop();
-
+  {
+    view my_view;
+    my_view.loop();
+  }
   SDL_Quit();
   return 0;
   }

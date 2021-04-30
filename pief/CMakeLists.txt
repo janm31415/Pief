@@ -1,3 +1,14 @@
+if (WIN32)
+  set(OPENGL_LIBRARIES opengl32.lib CACHE FILEPATH "opengl lib file")
+endif (WIN32)
+
+if (UNIX)
+  if (APPLE)
+    set(OPENGL_LIBRARIES "/System/Library/Frameworks/OpenGL.framework/OpenGL" CACHE FILEPATH "opengl lib file")
+  else()
+    set(OPENGL_LIBRARIES "/usr/lib/x86_64-linux-gnu/libOpenGL.so.0.0.0" CACHE FILEPATH "opengl lib file")
+  endif(APPLE)
+endif (UNIX)
 
 set(IMGUI
 ${CMAKE_CURRENT_SOURCE_DIR}/../imgui_sdl/imgui.h
@@ -64,11 +75,12 @@ glew.cpp
 set(JSON
 ${CMAKE_CURRENT_SOURCE_DIR}/../json/json.hpp
 )
-
+if (WIN32)
 set(CMAKE_C_FLAGS_DEBUG "/W4 /MP /GF /RTCu /Od /MDd /Zi")
 set(CMAKE_CXX_FLAGS_DEBUG "/W4 /MP /GF /RTCu /Od /MDd /Zi")
 set(CMAKE_C_FLAGS_RELEASE "/W4 /MP /GF /O2 /Ob2 /Oi /Ot /MD /Zi")
 set(CMAKE_CXX_FLAGS_RELEASE "/W4 /MP /GF /O2 /Ob2 /Oi /Ot /MD /Zi")
+endif(WIN32)
 
 include ("../jtk/jtk/jtk.cmake")
 
@@ -101,6 +113,6 @@ target_link_libraries(pief
     PRIVATE	
     SDL2
     SDL2main  
-    opengl32.lib   
+    ${OPENGL_LIBRARIES} 
     lifting
     )	

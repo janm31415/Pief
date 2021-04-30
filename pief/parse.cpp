@@ -3,6 +3,7 @@
 #include <sstream>
 #include <functional>
 #include <map>
+#include <cmath>
 
 namespace
   {
