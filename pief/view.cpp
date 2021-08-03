@@ -9,6 +9,8 @@
 #include "imguifilesystem.h"
 
 #include <glew/GL/glew.h>
+#define JTK_OPENGL_IMPLEMENTATION
+#include "jtk/jtk/opengl.h"
 
 #include <stdexcept>
 #include <chrono>
@@ -19,34 +21,12 @@
 #include <iomanip>
 #include <cmath>
 
-#include "buffer_object.h"
-#include "frame_buffer_object.h"
-#include "shader_program.h"
-#include "render_buffer.h"
-#include "vertex_array_object.h"
-#include "texture.h"
 #include "logging.h"
 
 #define V_W 800
 #define V_H 450
 #define V_X 50
 #define V_Y 50
-
-namespace
-  {
-  void gl_check_error(const char* txt)
-    {
-    unsigned int err = glGetError();
-    if (err)
-      {
-      std::stringstream str;
-      str << "GL error " << err << ": " << txt;
-      throw std::runtime_error(str.str());
-      }
-    }
-
-
-  }
 
 view::view() : _w(1600), _h(900), _quit(false),
 _vbo_array_blit(nullptr), _vbo_index_blit(nullptr), _vao_blit(nullptr),
@@ -138,6 +118,7 @@ view::~view()
 
 void view::_setup_blit_gl_objects(bool fullscreen)
   {
+  using namespace jtk;
   _viewport_w = V_W;
   _viewport_h = V_H;
   _viewport_pos_x = V_X;
@@ -258,6 +239,7 @@ void main()
 
 void view::_setup_gl_objects()
   {
+  using namespace jtk;
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -774,6 +756,7 @@ void view::_log_window()
 
 void view::loop()
   {
+  using namespace jtk;
   while (!_quit)
     {
     _poll_for_events();
@@ -781,7 +764,7 @@ void view::loop()
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-    _fbo->bind();
+    _fbo->bind(1);
     gl_check_error("_fbo->bind()");
     glViewport(0, 0, _viewport_w, _viewport_h);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

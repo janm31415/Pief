@@ -1,8 +1,8 @@
 #include "model.h"
 #include "logging.h"
 
-#include "buffer_object.h"
-#include "vertex_array_object.h"
+#include <glew/GL/glew.h>
+#include "jtk/jtk/opengl.h"
 
 #include "parse.h"
 
@@ -15,16 +15,6 @@
 
 namespace
   {
-  void gl_check_error(const char *txt)
-    {
-    unsigned int err = glGetError();
-    if (err)
-      {
-      std::stringstream str;
-      str << "GL error " << err << ": " << txt;
-      throw std::runtime_error(str.str());
-      }
-    }
 
   void forward_custom(double* sample, uint64_t n, uint64_t level, const std::vector<lifting_step>& custom_steps)
     {
@@ -367,6 +357,7 @@ void make_biorthogonal_wavelet_function(model& m, scheme s, const std::vector<li
 
 void fill_render_data(model& m, const std::vector<double>& values)
   {
+  using namespace jtk;
   m.delete_render_objects();
   double cutoff = 1000000.0;
   double max_value = *std::max_element(m.values.begin(), m.values.end());

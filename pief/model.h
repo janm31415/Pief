@@ -4,8 +4,11 @@
 #include <stdint.h>
 #include <string>
 
-class buffer_object;
-class vertex_array_object;
+namespace jtk
+  {
+  class buffer_object;
+  class vertex_array_object;
+  }
 
 enum lifting_step_type
   {
@@ -33,7 +36,7 @@ enum scheme
   cdf_9_7,
   chaikin,
   cubic_bsplines,
-  cubic_bspline_wavelets,  
+  cubic_bspline_wavelets,
   daubechies_d4,
   four_point,
   haar,
@@ -47,11 +50,11 @@ struct model
 
   void delete_render_objects();
 
-  int levels;  
+  int levels;
   std::vector<double> values;
 
-  vertex_array_object* _vao;
-  buffer_object *_vbo_array;
+  jtk::vertex_array_object* _vao;
+  jtk::buffer_object* _vbo_array;
   };
 
 void biorthogonal_inverse(double* sample, uint64_t n, uint64_t level, scheme s, const std::vector<lifting_step>& custom_steps);
@@ -74,6 +77,6 @@ void smooth(model& m, double threshold, int smooth_level, scheme s, const std::v
 
 void analyze(scheme s, const std::vector<lifting_step>& custom_steps);
 
-double compute_smoothness(const std::vector<double>& samples, double scale=1.0);
+double compute_smoothness(const std::vector<double>& samples, double scale = 1.0);
 
 void construct_stable_wavelet(std::vector<lifting_step>& custom_steps, double& sob, double& sob_dual);
